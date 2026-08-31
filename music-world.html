@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뮤직월드 🌎</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,"Noto Sans KR",sans-serif;background:#f7f5ff;color:#25213a}
+header{background:linear-gradient(135deg,#8067e8,#b78cff);color:white;padding:25px 8%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold}header span{font-size:14px}.container{max-width:1100px;margin:auto;padding:35px 20px}
+.hero{text-align:center;padding:40px 10px}.hero h1{font-size:40px;margin-bottom:12px}.hero p{color:#777;font-size:17px}
+.search{display:flex;max-width:600px;margin:25px auto}.search input{flex:1;padding:16px;border:1px solid #ddd;border-radius:15px 0 0 15px;outline:none;font-size:15px}.search button{border:none;background:#8067e8;color:white;padding:0 22px;border-radius:0 15px 15px 0;cursor:pointer}
+.country-list{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:25px 0}.country-btn{border:none;background:white;padding:12px 18px;border-radius:20px;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.08);font-size:14px}.country-btn:hover,.country-btn.active{background:#8067e8;color:white}
+.section-title{margin:35px 0 18px}.section-title h2{font-size:25px}.music-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.music-card{background:white;border-radius:22px;overflow:hidden;box-shadow:0 5px 20px rgba(0,0,0,.08);cursor:pointer;transition:.2s}.music-card:hover{transform:translateY(-5px)}
+.music-image{height:170px;display:flex;justify-content:center;align-items:center;font-size:65px;background:linear-gradient(135deg,#ded5ff,#f4ddff)}.music-info{padding:18px}.music-info h3{margin-bottom:8px}.music-info p{color:#777;font-size:14px}.tag{display:inline-block;background:#eee9ff;color:#7257d5;padding:5px 9px;border-radius:10px;font-size:12px;margin-top:12px}
+.detail{display:none;background:white;border-radius:25px;padding:30px;margin-top:30px;box-shadow:0 5px 25px rgba(0,0,0,.08)}.detail-top{display:flex;gap:25px;align-items:center;margin-bottom:30px}.detail-cover{width:180px;height:180px;background:linear-gradient(135deg,#8067e8,#d39cff);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:75px}.detail h1{margin-bottom:10px}
+.back{border:none;background:#eee9ff;color:#7257d5;padding:10px 16px;border-radius:12px;cursor:pointer;margin-bottom:25px}.info-box{background:#faf9ff;padding:22px;border-radius:18px;margin-top:18px}.info-box h3{margin-bottom:10px}.info-box p{line-height:1.7;color:#555}.listen{display:inline-block;margin-top:15px;background:#8067e8;color:white;padding:12px 18px;border-radius:12px;text-decoration:none}
+footer{text-align:center;padding:40px;color:#999;font-size:13px}@media(max-width:600px){.hero h1{font-size:30px}.detail-top{flex-direction:column;align-items:flex-start}.detail-cover{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="logo">🌎 MUSIC WORLD</div><span>음악으로 세계를 여행해요</span></header>
+<main class="container">
+<section class="hero"><h1>🎧 세계의 음악을 발견해보세요</h1><p>음악을 듣고, 그 나라의 문화와 이야기도 알아봐요.</p>
+<div class="search"><input id="searchInput" placeholder="음악이나 나라를 검색해보세요"><button onclick="searchMusic()">검색</button></div></section>
+<div class="country-list">
+<button class="country-btn active" onclick="filterCountry('전체',this)">🌎 전체</button>
+<button class="country-btn" onclick="filterCountry('한국',this)">🇰🇷 한국</button>
+<button class="country-btn" onclick="filterCountry('일본',this)">🇯🇵 일본</button>
+<button class="country-btn" onclick="filterCountry('미국',this)">🇺🇸 미국</button>
+<button class="country-btn" onclick="filterCountry('브라질',this)">🇧🇷 브라질</button>
+<button class="country-btn" onclick="filterCountry('인도',this)">🇮🇳 인도</button>
+</div>
+<div id="home"><div class="section-title"><h2>✨ 오늘의 음악 추천</h2></div><div class="music-grid" id="musicGrid"></div></div>
+<section class="detail" id="detail"><button class="back" onclick="goHome()">← 음악 목록으로</button>
+<div class="detail-top"><div class="detail-cover" id="detailEmoji">🎵</div><div><h1 id="detailTitle"></h1><p id="detailArtist"></p><p id="detailCountry"></p><span class="tag" id="detailGenre"></span><br><a class="listen" id="listenButton" href="#" target="_blank">🎧 음악 찾아보기</a></div></div>
+<div class="info-box"><h3>📖 이 음악은 어떤 의미일까?</h3><p id="meaning"></p></div>
+<div class="info-box"><h3>🌎 음악이 만들어진 배경</h3><p id="background"></p></div>
+<div class="info-box"><h3>🏛️ 이 나라의 음악 문화</h3><p id="culture"></p></div>
+<div class="info-box"><h3>🥁 음악의 특징</h3><p id="feature"></p></div>
+<div class="info-box"><h3>💡 알고 보면 재미있는 사실</h3><p id="fact"></p></div>
+</section></main>
+<footer>MUSIC WORLD 🌎 · 음악으로 만나는 세계</footer>
+<script>
+const musicData=[
+{title:"아리랑",artist:"한국 전통 민요",country:"한국",genre:"전통음악",emoji:"🇰🇷",meaning:"아리랑은 사랑과 이별, 삶의 어려움과 희망 등 다양한 감정을 담아낼 수 있는 노래예요. 지역에 따라 가사와 멜로디가 조금씩 달라요.",background:"아리랑은 오랜 시간 동안 한국 사람들 사이에서 전해져 온 민요예요. 정확한 시작 시점은 하나로 정해져 있지 않으며 여러 지역에서 다양한 형태로 발전했어요.",culture:"한국에서는 아리랑이 단순한 노래를 넘어 한국의 전통과 정서를 상징하는 음악으로 알려져 있어요.",feature:"느린 부분에서는 한의 정서를, 빠른 부분에서는 흥과 즐거움을 표현할 수 있어요.",fact:"아리랑은 지역에 따라 정선아리랑, 밀양아리랑, 진도아리랑 등 여러 가지 형태가 있어요."},
+{title:"K-pop",artist:"한국 대중음악",country:"한국",genre:"팝",emoji:"🎤",meaning:"K-pop은 사랑, 꿈, 우정, 자신감 등 다양한 주제를 노래로 표현해요.",background:"한국의 대중음악은 여러 장르의 음악을 받아들이면서 독특한 스타일로 발전했고, 온라인 플랫폼을 통해 세계적으로 알려졌어요.",culture:"K-pop은 음악뿐만 아니라 춤, 패션, 영상 콘텐츠 등 다양한 문화와 함께 즐기는 특징이 있어요.",feature:"강한 비트와 기억하기 쉬운 멜로디, 퍼포먼스가 중요한 요소로 활용돼요.",fact:"K-pop 팬들은 음악뿐 아니라 뮤직비디오, 안무, 콘서트 등 다양한 콘텐츠를 함께 즐겨요."},
+{title:"사쿠라",artist:"일본 음악 문화",country:"일본",genre:"일본 전통/대중음악",emoji:"🇯🇵",meaning:"벚꽃을 소재로 한 일본의 음악에서는 아름다움뿐 아니라 짧게 피고 지는 순간과 변화에 대한 감정이 표현되기도 해요.",background:"벚꽃은 오랫동안 일본 문화와 예술에서 중요한 소재로 사용되어 왔어요.",culture:"일본에서는 봄에 벚꽃을 감상하는 문화인 하나미가 유명해요.",feature:"전통적인 일본 음악에서는 샤미센이나 고토 같은 악기가 사용되기도 해요.",fact:"벚꽃은 일본의 봄을 상징하는 대표적인 이미지 중 하나예요."},
+{title:"Jazz",artist:"미국 재즈 음악",country:"미국",genre:"재즈",emoji:"🇺🇸",meaning:"재즈는 즉흥연주를 통해 연주자가 자신의 감정과 개성을 자유롭게 표현하는 특징이 있어요.",background:"재즈는 미국에서 여러 음악적 전통이 만나면서 발전한 음악 장르예요.",culture:"재즈는 공연장에서 연주자들이 서로 음악적으로 대화하듯 연주하는 문화와 깊은 관련이 있어요.",feature:"즉흥연주와 다양한 리듬, 독특한 화성이 중요한 특징이에요.",fact:"재즈 연주에서는 같은 곡이라도 연주자에 따라 분위기가 크게 달라질 수 있어요."},
+{title:"삼바",artist:"브라질 전통 음악",country:"브라질",genre:"삼바",emoji:"🇧🇷",meaning:"삼바는 춤과 음악을 통해 즐거움과 에너지를 표현하는 음악으로 알려져 있어요.",background:"삼바는 브라질의 다양한 문화적 배경 속에서 발전한 음악과 춤의 형태예요.",culture:"브라질의 카니발은 삼바와 밀접한 관계가 있으며 화려한 퍼레이드와 음악, 춤이 함께 어우러져요.",feature:"강한 리듬과 타악기의 사용, 춤과 함께 즐기는 것이 특징이에요.",fact:"삼바는 브라질을 대표하는 문화 중 하나로 세계적으로도 널리 알려져 있어요."},
+{title:"인도 전통음악",artist:"인도 전통 연주",country:"인도",genre:"전통음악",emoji:"🇮🇳",meaning:"인도 전통음악은 특정한 분위기와 감정을 표현하는 데 집중하며 즉흥적인 연주가 중요한 역할을 하기도 해요.",background:"인도에는 오랜 역사 동안 발전해 온 다양한 음악 전통이 있으며 지역과 종교에 따라서도 음악 형태가 달라요.",culture:"음악은 인도의 축제, 종교 의식, 공연 문화 등 여러 분야에서 중요한 역할을 해요.",feature:"시타르, 타블라 등 독특한 전통 악기가 사용돼요.",fact:"인도 전통음악에서는 라가와 탈라라는 개념이 음악의 중요한 요소로 활용돼요."}
+];
+function displayMusic(data){const grid=document.getElementById("musicGrid");grid.innerHTML="";if(!data.length){grid.innerHTML="<p>검색 결과가 없어요 😢</p>";return}data.forEach((music,index)=>{const card=document.createElement("div");card.className="music-card";card.innerHTML=`<div class="music-image">${music.emoji}</div><div class="music-info"><h3>${music.title}</h3><p>${music.artist}</p><p>${music.country}</p><span class="tag">${music.genre}</span></div>`;card.onclick=()=>showDetail(index,data);grid.appendChild(card)})}
+function filterCountry(country,button){document.querySelectorAll(".country-btn").forEach(btn=>btn.classList.remove("active"));button.classList.add("active");displayMusic(country==="전체"?musicData:musicData.filter(m=>m.country===country))}
+function searchMusic(){const keyword=document.getElementById("searchInput").value.toLowerCase().trim();displayMusic(musicData.filter(m=>m.title.toLowerCase().includes(keyword)||m.artist.toLowerCase().includes(keyword)||m.country.toLowerCase().includes(keyword)||m.genre.toLowerCase().includes(keyword)))}
+function showDetail(index,data){const m=data[index];document.getElementById("home").style.display="none";document.getElementById("detail").style.display="block";document.getElementById("detailEmoji").textContent=m.emoji;document.getElementById("detailTitle").textContent=m.title;document.getElementById("detailArtist").textContent="🎤 "+m.artist;document.getElementById("detailCountry").textContent="🌎 "+m.country;document.getElementById("detailGenre").textContent=m.genre;document.getElementById("meaning").textContent=m.meaning;document.getElementById("background").textContent=m.background;document.getElementById("culture").textContent=m.culture;document.getElementById("feature").textContent=m.feature;document.getElementById("fact").textContent=m.fact;document.getElementById("listenButton").href="https://www.youtube.com/results?search_query="+encodeURIComponent(m.title+" "+m.artist);window.scrollTo({top:0,behavior:"smooth"})}
+function goHome(){document.getElementById("detail").style.display="none";document.getElementById("home").style.display="block";window.scrollTo({top:0,behavior:"smooth"})}
+displayMusic(musicData);
+</script>
+</body>
+</html>
